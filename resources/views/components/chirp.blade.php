@@ -1,4 +1,3 @@
-
 @props(['chirp'])
 
 <div class="card bg-base-100 shadow">
@@ -9,7 +8,7 @@
                     <div class="size-10 rounded-full">
                         <img src="<https://avatars.laravel.cloud/>{{ urlencode($chirp->user->email) }}"
                              alt="{{ $chirp->user->name }}'s avatar"
-                             class="rounded-full" />
+                             class="rounded-full"/>
                     </div>
                 </div>
             @else
@@ -17,7 +16,7 @@
                     <div class="size-10 rounded-full">
                         <img src="<https://avatars.laravel.cloud/f61123d5-0b27-434c-a4ae-c653c7fc9ed6?vibe=stealth>"
                              alt="Anonymous User"
-                             class="rounded-full" />
+                             class="rounded-full"/>
                     </div>
                 </div>
             @endif
@@ -28,33 +27,37 @@
                         <span class="text-sm font-semibold">{{ $chirp->user ? $chirp->user->name : 'Anonymous' }}</span>
                         <span class="text-base-content/60">·</span>
                         <span class="text-sm text-base-content/60">{{ $chirp->created_at->diffForHumans() }}</span>
-{{--                        IN ENGLISH: if chirp's updated is greater than (gt) than its created_at + 5 seconds--}}
+                        {{--                        IN ENGLISH: if chirp's updated is greater than (gt) than its created_at + 5 seconds--}}
                         @if ($chirp->updated_at->gt($chirp->created_at->addSeconds(5)))
                             <span class="text-base-content/60">.</span>
                             <span class="text-sm text-base-content/60 italic">Edited</span>
                         @endif
                     </div>
 
-                    <div class="flex gap-1">
-                        {{--                    Edit--}}
-                        <a href="/chirps/{{ $chirp->id }}/edit" class="btn btn-ghost btn-xs">
-                            Edit
-                        </a>
+                    {{-- IN ENGLISH: if auth got checked and auth id is equal to current chirp's user_id --}}
+                    {{-- @if (auth()->check() && auth()->id() === $chirp->user_id)--}}
+                    @can('update', $chirp)
+                        <div class="flex gap-1">
+                            {{--                    Edit--}}
+                            <a href="/chirps/{{ $chirp->id }}/edit" class="btn btn-ghost btn-xs">
+                                Edit
+                            </a>
 
-                        {{--                    Delete--}}
-                        <form method="POST" action="/chirps/{{ $chirp->id }}">
-                            @csrf
-                            @method('DELETE')
-                            <button
-                                type="submit"
-                                class="btn btn-ghost btn-xs text-error"
-                                onClick="return confirm('Are you sure you want to delete this chirp?')"
-                            >
-                                Delete
-                            </button>
-                        </form>
-                    </div>
-
+                            {{--                    Delete--}}
+                            <form method="POST" action="/chirps/{{ $chirp->id }}">
+                                @csrf
+                                @method('DELETE')
+                                <button
+                                    type="submit"
+                                    class="btn btn-ghost btn-xs text-error"
+                                    onClick="return confirm('Are you sure you want to delete this chirp?')"
+                                >
+                                    Delete
+                                </button>
+                            </form>
+                        </div>
+                    @endcan
+                    {{--  @endif--}}
                 </div>
 
                 <p class="mt-1">
