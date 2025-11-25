@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 
 namespace App\Http\Controllers;
 
-use App\Models\Chirp;
+use Illuminate\Http\Request;
 
+use App\Models\Chirp;
 class ChirpController extends Controller
 {
     /**
@@ -35,7 +35,19 @@ class ChirpController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'message' => 'required|string|max:255',
+        ], [
+            'message.required' => 'Please write something to chirp!',
+            'message.max' => 'Chirp must be 255 characters or less.'
+        ]);
+
+        \App\Models\Chirp::create([
+            'message' => $validated['message'],
+            'user_id' =>null
+        ]);
+
+        return redirect('/')->with('success', 'Your chirp has been posted!!');
     }
 
     /**
