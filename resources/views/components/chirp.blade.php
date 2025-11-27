@@ -60,33 +60,49 @@
                     {{--  @endif--}}
                 </div>
 
-                <p class="mt-1">
+                <p class="mt-1 mb-3">
                     {{ $chirp->message }}
                 </p>
                 {{-- buttons --}}
-                <div>
+                <div class="flex flex-row justify-start gap-3 w-full items-center border-t border-gray-400 pt-3">
+                    <span class="text-xs">
+                        <span class="font-bold">{{ $chirp->likes->count() }}</span> <span class="text-gray-500">Likes</span>
+                    </span>
                     @if ($chirp->likes->contains('user_id', auth()->id()))
                         <form
                             method="POST"
-{{--                            action="/chirps/{{$chirp->id}}/unlike"--}}
+                            {{--action="/chirps/{{$chirp->id}}/unlike"--}}
                             action="{{ route('chirps.unlike', $chirp) }}"
                         >
                             @csrf
                             @method('DELETE')
-                            <button type="submit">Unlike</button>
+                            <button type="submit" class="btn btn-info btn-xs">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="yes" viewBox="0 0 24 24"
+                                     stroke-width="2.5" stroke="currentColor" class="size-[1.2em]">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                          d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"/>
+                                </svg>
+                                Unlike
+                            </button>
 
                         </form>
                     @else
                         <form
                             method="POST"
-{{--                            action="chirps/{{$chirp->id}}/like"--}}
+                            {{--action="chirps/{{$chirp->id}}/like"--}}
                             action="{{ route('chirps.like', $chirp) }}"
                         >
                             @csrf
-                            <button type="submit">Like</button>
+                            <button type="submit" class="btn btn-outline btn-info btn-xs">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                     stroke-width="2.5" stroke="currentColor" class="size-[1.2em]">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                          d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"/>
+                                </svg>
+                                Like
+                            </button>
                         </form>
                     @endif
-                    <span>{{ $chirp->likes->count() }} Likes</span>
                 </div>
             </div>
         </div>
