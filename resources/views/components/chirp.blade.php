@@ -63,6 +63,31 @@
                 <p class="mt-1">
                     {{ $chirp->message }}
                 </p>
+                {{-- buttons --}}
+                <div>
+                    @if ($chirp->likes->contains('user_id', auth()->id()))
+                        <form
+                            method="POST"
+{{--                            action="/chirps/{{$chirp->id}}/unlike"--}}
+                            action="{{ route('chirps.unlike', $chirp) }}"
+                        >
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit">Unlike</button>
+
+                        </form>
+                    @else
+                        <form
+                            method="POST"
+{{--                            action="chirps/{{$chirp->id}}/like"--}}
+                            action="{{ route('chirps.like', $chirp) }}"
+                        >
+                            @csrf
+                            <button type="submit">Like</button>
+                        </form>
+                    @endif
+                    <span>{{ $chirp->likes->count() }} Likes</span>
+                </div>
             </div>
         </div>
     </div>
