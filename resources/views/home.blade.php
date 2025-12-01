@@ -38,7 +38,7 @@
         </div>
 
         <!-- Feed -->
-        <div class="space-y-4 mt-8">
+        <div id="chirpsContainer" class="space-y-4 mt-8">
             @forelse ($chirps as $chirp)
                 <x-chirp :chirp="$chirp"/>
             @empty

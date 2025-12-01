@@ -21,3 +21,11 @@
         }
     }
 }
+
+.toggleBtn svg {
+    fill: none;
+}
+
+.toggleBtn:not(.btn-outline) svg {
+    fill: #0a0a0a;
+}

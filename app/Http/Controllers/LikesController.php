@@ -14,7 +14,7 @@ class LikesController extends Controller
         // IN ENGLISH:
         // get chirp's likes where the user_id is the current auth's id
         // if it does exist, return the back with error
-        if ($chirp->likes()->where('user_id', auth()->id())->exists()){
+        if ($chirp->likes()->where('user_id', auth()->id())->exists()) {
             return back()->with('error', 'Already liked');
         }
 
@@ -24,7 +24,8 @@ class LikesController extends Controller
             'user_id' => auth()->id()
         ]);
 
-        return back()->with('success', 'Liked ' . $chirp->message);
+//        return back()->with('success', 'Liked ' . $chirp->message);
+        return response()->json(['success' => true, 'likes_count' => $chirp->likes()->count()]);
     }
 
     public function destroy(Request $request, Chirp $chirp)
@@ -39,6 +40,7 @@ class LikesController extends Controller
             ->delete();
 
 
-        return back()->with('success', 'unliked!');
+//        return back()->with('success', 'unliked!');
+        return response()->json(['success' => true, 'likes_count' => $chirp->likes()->count()]);
     }
 }
