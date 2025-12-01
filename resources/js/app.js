@@ -65,17 +65,20 @@ $("#chirpsContainer").on('click', async function (e) {
                 btn.dataset.liked = "0";
                 // btnText.textContent = "Like";
                 btnText.text("Like")
-                btn.classList.add("btn-outline");
+                // btn.classList.add("btn-outline");
             } else {
                 btn.dataset.liked = "1";
                 // btnText.textContent = "Unlike";
                 btnText.text("Unlike")
-                btn.classList.remove("btn-outline");
+                // btn.classList.remove("btn-outline");
             }
         },
         error: function (xhr, status, error) {
             // Callback function executed on error
-            console.error("Error:", status, error);
+            console.error("Something error:", xhr.status, status, error);
+            if (xhr.status) {
+                window.location.href = "http://final-assignment-w0531640.test/login";
+            }
         },
     })
 })

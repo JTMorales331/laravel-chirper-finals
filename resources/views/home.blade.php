@@ -57,4 +57,13 @@
             @endforelse
         </div>
     </div>
+
+    <script>
+        function thingy(isAuth) {
+            console.log({isAuth})
+            if (isAuth) {
+                href=
+            }
+        }
+    </script>
 </x-layout>
