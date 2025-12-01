@@ -74,7 +74,7 @@
 
                     <button type="button" data-id="{{$chirp->id}}"
                             data-liked="{{ $chirp->likes->contains('user_id', auth()->id()) ? '1' : '0' }}"
-                            onclick="thingy({{ auth()->id() ? "true" : "false" }})"
+                            onclick="thingy(this, {{ auth()->id() ? "true" : "false" }})"
                             class="toggleBtn btn btn-info btn-xs {{ $chirp->likes->contains('user_id', auth()->id()) ? "" : "btn-outline"}}">
                         <svg xmlns="http://www.w3.org/2000/svg"
                              fill="{{ $chirp->likes->contains('user_id', auth()->id()) ? "yes" : "none" }}"

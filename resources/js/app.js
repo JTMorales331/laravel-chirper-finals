@@ -3,9 +3,95 @@ import $ from "jquery";
 
 // none jQuery version is
 // document.getElementById("chirpsContainer").addEventLinster(you know what else);
-$("#chirpsContainer").on('click', async function (e) {
-    const btn = e.target.closest(".toggleBtn");
+// $("#chirpsContainer").on('click', async function (e) {
+//     const btn = e.target.closest(".toggleBtn");
+//     if (!btn) return;
+//
+//     const chirpId = btn.dataset.id
+//     // const btnText = document.getElementById(`text-${chirpId}`);
+//     const btnText = $(`#text-${chirpId}`);
+//     const liked = btn.dataset.liked === "1";
+//     const counter = $(`#likes-${chirpId}`)
+//     console.log(btn.dataset.liked, liked)
+//     const url = liked ? `/chirps/${chirpId}/unlike` : `/chirps/${chirpId}/like`
+//
+//     // https://stackoverflow.com/questions/36956693/including-csrf-token-in-the-layout
+//     // const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+//
+//     // console.log({token})
+//
+//     // tried the classic async await fetch. still works. idk if optimal
+//     // try {
+//     //     const res = await fetch(url, {
+//     //         method: liked ? "DELETE" : "POST",
+//     //         headers: {
+//     //             "x-csrf-token": token,
+//     //             "Content-Type": "application/json"
+//     //         }
+//     //     })
+//     //
+//     //     const data = await res.json();
+//     //     // console.log({btn});
+//     //
+//     //     counter.textContent = data.likes_count
+//     //
+//     //     if (liked) {
+//     //         btn.dataset.liked = "0";
+//     //         btnText.textContent = "Like";
+//     //         btn.classList.add("btn-outline");
+//     //     } else {
+//     //         btn.dataset.liked = "1";
+//     //         btnText.textContent = "Unlike";
+//     //         btn.classList.remove("btn-outline");
+//     //     }
+//     // } catch (err) {
+//     //     console.error("Error: ", err)
+//     // }
+//
+//     // tried the jQuery ajax version
+//     $.ajax({
+//         url: url,
+//         type: liked ? "DELETE" : "POST",
+//         headers: {
+//             // https://stackoverflow.com/questions/36956693/including-csrf-token-in-the-layout
+//             "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content'),
+//         },
+//         dataType: "json",
+//         success: function (res) {
+//             console.log("Success: ", res)
+//             // counter.textContent = res.likes_count
+//             counter.text(res.likes_count);
+//             if (liked) {
+//                 btn.dataset.liked = "0";
+//                 // btnText.textContent = "Like";
+//                 btnText.text("Like")
+//                 // btn.classList.add("btn-outline");
+//             } else {
+//                 btn.dataset.liked = "1";
+//                 // btnText.textContent = "Unlike";
+//                 btnText.text("Unlike")
+//                 // btn.classList.remove("btn-outline");
+//             }
+//         },
+//         error: function (xhr, status, error) {
+//             // Callback function executed on error
+//             console.error("Something error:", xhr.status, status, error);
+//             if (xhr.status) {
+//                 window.location.href = "http://final-assignment-w0531640.test/login";
+//             }
+//         },
+//     })
+// })
+
+// none jQuery version is
+// document.getElementById("chirpsContainer").addEventLinster(you know what else);
+async function thingy(btn, isAuth) {
     if (!btn) return;
+
+    console.log({isAuth})
+    if (!isAuth) {
+        return false;
+    }
 
     const chirpId = btn.dataset.id
     // const btnText = document.getElementById(`text-${chirpId}`);
@@ -65,12 +151,12 @@ $("#chirpsContainer").on('click', async function (e) {
                 btn.dataset.liked = "0";
                 // btnText.textContent = "Like";
                 btnText.text("Like")
-                // btn.classList.add("btn-outline");
+                btn.classList.add("btn-outline");
             } else {
                 btn.dataset.liked = "1";
                 // btnText.textContent = "Unlike";
                 btnText.text("Unlike")
-                // btn.classList.remove("btn-outline");
+                btn.classList.remove("btn-outline");
             }
         },
         error: function (xhr, status, error) {
@@ -81,25 +167,6 @@ $("#chirpsContainer").on('click', async function (e) {
             }
         },
     })
-})
+}
 
-// btn.addEventListener("click", function () {
-//
-//     const chirp = this.dataset.id;
-//
-//     console.log({chirp})
-//
-//     fetch(`/chirps/${chirp}/like`, {
-//         method: "POST",
-//         headers: {
-//             // https://stackoverflow.com/questions/36956693/including-csrf-token-in-the-layout
-//             "x-csrf-token": $('meta[name="csrf-token"]').attr('content'),
-//             "Content-Type": "application/json"
-//         }
-//     })
-//         .then((res) => {
-//             // res.json()
-//             console.log(res.json());
-//         })
-//
-// })
+// window.thingy = thingy;
