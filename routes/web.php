@@ -7,6 +7,13 @@ use \App\Http\Controllers\Auth\Logout;
 use \App\Http\Controllers\LikesController;
 use \App\Http\Controllers\BookmarksController;
 
+Route::get('/debug-test', function () {
+    $a = 5;
+    $b = 7;
+    $c = $a + $b; // ✅ BREAKPOINT HERE
+    return $c;
+});
+
 Route::get('/', [ChirpController::class, 'index']);
 Route::middleware('auth')->group(function () {
     Route::post('/chirps', [ChirpController::class, 'store']);
@@ -19,7 +26,7 @@ Route::middleware('auth')->group(function () {
 
 
     Route::post('/chirps/{chirp}/bookmark', [BookmarksController::class, 'store'])->name('bookmarks.store');
-    Route::delete('/chirps/{chirp}/bookmark', [BookmarksController::class, 'delete'])->name('bookmarks.delete');
+    Route::delete('/chirps/{chirp}/bookmark', [BookmarksController::class, 'destroy'])->name('bookmarks.delete');
     Route::post('/chirps/{chirp}/like', [LikesController::class, 'store'])->name('chirps.like');
     Route::delete('/chirps/{chirp}/unlike', [LikesController::class, 'destroy'])->name('chirps.unlike');
 

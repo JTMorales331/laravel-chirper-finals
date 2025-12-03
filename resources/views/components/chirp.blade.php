@@ -88,8 +88,9 @@
                         </span>
                     </button>
 
-                    <button onclick="bookmark(this)" class="ml-auto btn btn-ghost btn-xs" data-id="{{ $chirp->id }}">
-                        Bookmark
+                    <button onclick="bookmark(this)" class="ml-auto btn btn-ghost btn-xs" data-id="{{ $chirp->id }}"
+                            data-bookmarked="{{ (bool)$chirp->bookmarks->contains('user_id', auth()->id()) }}">
+                        {{ $chirp->bookmarks->contains('user_id', auth()->id()) ? "Unbookmark" : "Bookmark" }}
                     </button>
 
                 </div>

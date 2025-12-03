@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Bookmark;
 use Illuminate\Http\Request;
 use App\Models\Chirp;
+use Illuminate\Support\Facades\Log;
 
 class BookmarksController extends Controller
 {
@@ -45,8 +46,10 @@ class BookmarksController extends Controller
     {
         $user = auth()->id();
 
-        Chirp::where('user_id', $user)
-            ->where('chir_id', $chirp->id)
+//        Log::info('This is working: ' . $chirp->id);
+
+        Bookmark::where('user_id', $user)
+            ->where('chirp_id', $chirp->id)
             ->delete();
 
         return response()->json(['success' => true]);

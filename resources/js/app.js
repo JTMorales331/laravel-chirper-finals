@@ -86,7 +86,7 @@ import $ from "jquery";
 // none jQuery version is
 // document.getElementById("chirpsContainer").addEventLinster(you know what else);
 async function thingy(btn) {
-    console.log({isAuth})
+    // console.log({isAuth})
     // if (!isAuth) {
     //     return false;
     // }
@@ -144,19 +144,29 @@ async function bookmark(btn) {
 
     const chirpId = btn.dataset.id
 
+    const isBookmarked = btn.dataset.bookmarked === "1"
+
     console.log({btn})
 
-    console.log({chirpId})
+    console.log({isBookmarked})
 
     try {
         const res = await fetch(`chirps/${chirpId}/bookmark`, {
-                "method": "POST"
+                "method": isBookmarked ? "DELETE" : "POST"
             }
         )
 
         const data = await res.json()
 
         console.log({data})
+
+        if (isBookmarked) {
+            btn.dataset.bookmarked = ""
+            btn.textContent = "Bookmark"
+        } else {
+            btn.textContent = "Unbookmark"
+            btn.dataset.bookmarked = "1"
+        }
 
     } catch (err) {
         console.error("Error: ", err)
