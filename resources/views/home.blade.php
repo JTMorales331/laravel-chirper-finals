@@ -74,16 +74,16 @@
             const url = liked ? `/chirps/${chirpId}/unlike` : `/chirps/${chirpId}/like`
 
             // https://stackoverflow.com/questions/36956693/including-csrf-token-in-the-layout
-            const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            // const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content')
 
-            console.log({token})
+            // console.log({token})
 
             // tried the classic async await fetch. still works. idk if optimal
             try {
                 const res = await fetch(url, {
                     method: liked ? "DELETE" : "POST",
                     headers: {
-                        "x-csrf-token": token,
+                        // "x-csrf-token": token,
                         "Content-Type": "application/json"
                     }
                 })
