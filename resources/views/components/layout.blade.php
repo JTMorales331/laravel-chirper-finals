@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-{{--    <meta name="csrf-token" content="{{ csrf_token() }}" />--}}
+    {{--    <meta name="csrf-token" content="{{ csrf_token() }}" />--}}
     <title>{{ isset($title) ? $title . ' - Chirper' : 'Chirper' }}</title>
     <link rel="preconnect" href="<https://fonts.bunny.net>">
     <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600,700" rel="stylesheet"/>
@@ -15,8 +15,9 @@
 
 <body class="min-h-screen flex flex-col bg-base-200 font-sans">
 <nav class="navbar bg-base-100">
-    <div class="navbar-start">
+    <div class="navbar-start gap-2">
         <a href="/" class="btn btn-ghost text-xl">🐦 Chirper</a>
+        <a href="/bookmarks" class="btn btn-ghost">Bookmarks</a>
     </div>
     <div class="navbar-end gap-2">
         @auth

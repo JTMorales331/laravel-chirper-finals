@@ -1,0 +1,52 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Bookmark;
+use Illuminate\Http\Request;
+use App\Models\Chirp;
+
+class BookmarksController extends Controller
+{
+    /**
+     * Store a newly created resource in storage.
+     */
+
+    public function index(Request $request, Chirp $chirp)
+    {
+        // we get the current auth's user's bookmarks along with the chirp.user's models
+        $bookmarks = auth()->user()->bookmarks()->with('chirp.user')->latest()->get();
+
+        // we "pluc" the chirp models from the bookmarks collection
+        $chirps = $bookmarks->pluck('chirp');
+        return view('bookmarks', ['chirps' => $chirps]);
+    }
+
+    public function store(Request $request, Chirp $chirp)
+    {
+        // check if its already bookmarked
+        if ($chirp->bookmarks()->where('user_id', auth()->id())->exists()) {
+            return back()->with('error', 'Already bookmarked');
+        }
+
+        $chirp->bookmarks()->create([
+            'user_id' => auth()->id()
+        ]);
+
+        return response()->json(['success' => true]);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(Request $request, Chirp $chirp)
+    {
+        $user = auth()->id();
+
+        Chirp::where('user_id', $user)
+            ->where('chir_id', $chirp->id)
+            ->delete();
+
+        return response()->json(['success' => true]);
+    }
+}
