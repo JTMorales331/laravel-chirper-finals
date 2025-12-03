@@ -1,6 +1,6 @@
 @props(['chirp'])
 
-<div class="card bg-base-100 shadow">
+<div class="card bg-base-100 shadow" id="chirp-card-{{ $chirp->id }}">
     <div class="card-body">
         <div class="flex space-x-3">
             @if($chirp->user)
@@ -88,8 +88,11 @@
                         </span>
                     </button>
 
-                    <button onclick="bookmark(this)" class="ml-auto btn btn-ghost btn-xs" data-id="{{ $chirp->id }}"
-                            data-bookmarked="{{ (bool)$chirp->bookmarks->contains('user_id', auth()->id()) }}">
+                    <button onclick="bookmark(this)"
+                            class="ml-auto btn btn-xs {{ $chirp->bookmarks->contains('user_id', auth()->id()) ? "btn-neutral" : "btn-ghost" }}"
+                            data-id="{{ $chirp->id }}"
+                            data-bookmarked="{{ (bool)$chirp->bookmarks->contains('user_id', auth()->id()) }}"
+                    >
                         {{ $chirp->bookmarks->contains('user_id', auth()->id()) ? "Unbookmark" : "Bookmark" }}
                     </button>
 

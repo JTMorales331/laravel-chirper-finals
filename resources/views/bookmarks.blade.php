@@ -7,7 +7,7 @@
         <h1 class="text-3xl font-bold mt-8">Bookmarked Chirps</h1>
 
         <!-- Feed -->
-        <div id="chirpsContainer" class="space-y-4 mt-8">
+        <div id="bookmarksContainer" class="space-y-4 mt-8">
             @forelse ($chirps as $chirp)
                 <x-chirp :chirp="$chirp"/>
             @empty

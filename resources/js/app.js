@@ -143,10 +143,13 @@ window.thingy = thingy;
 async function bookmark(btn) {
 
     const chirpId = btn.dataset.id
-
+    const parentDiv = document.getElementById('bookmarksContainer');
+    const cardToRemove = document.getElementById(`chirp-card-${chirpId}`)
     const isBookmarked = btn.dataset.bookmarked === "1"
 
+
     console.log({btn})
+    console.log(parentDiv)
 
     console.log({isBookmarked})
 
@@ -156,6 +159,11 @@ async function bookmark(btn) {
             }
         )
 
+        if(parentDiv && btn && parentDiv.contains(btn) && cardToRemove){
+            console.log(cardToRemove)
+            cardToRemove.remove();
+        }
+
         const data = await res.json()
 
         console.log({data})
@@ -163,9 +171,13 @@ async function bookmark(btn) {
         if (isBookmarked) {
             btn.dataset.bookmarked = ""
             btn.textContent = "Bookmark"
+            btn.classList.add("btn-ghost");
+            btn.classList.remove("btn-neutral");
         } else {
             btn.textContent = "Unbookmark"
             btn.dataset.bookmarked = "1"
+            btn.classList.remove("btn-ghost");
+            btn.classList.add("btn-neutral");
         }
 
     } catch (err) {
