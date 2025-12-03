@@ -109,39 +109,7 @@
                 console.error("Error: ", err)
             }
 
-            // tried the jQuery ajax version
-            // $.ajax({
-            //     url: url,
-            //     type: liked ? "DELETE" : "POST",
-            //     headers: {
-            //         // https://stackoverflow.com/questions/36956693/including-csrf-token-in-the-layout
-            //         "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content'),
-            //     },
-            //     dataType: "json",
-            //     success: function (res) {
-            //         console.log("Success: ", res)
-            //         // counter.textContent = res.likes_count
-            //         counter.text(res.likes_count);
-            //         if (liked) {
-            //             btn.dataset.liked = "0";
-            //             // btnText.textContent = "Like";
-            //             btnText.text("Like")
-            //             // btn.classList.add("btn-outline");
-            //         } else {
-            //             btn.dataset.liked = "1";
-            //             // btnText.textContent = "Unlike";
-            //             btnText.text("Unlike")
-            //             // btn.classList.remove("btn-outline");
-            //         }
-            //     },
-            //     error: function (xhr, status, error) {
-            //         // Callback function executed on error
-            //         console.error("Something error:", xhr.status, status, error);
-            //         if (xhr.status) {
-            //             window.location.href = "http://final-assignment-w0531640.test/login";
-            //         }
-            //     },
-            // })
+
         }
     </script>
 </x-layout>

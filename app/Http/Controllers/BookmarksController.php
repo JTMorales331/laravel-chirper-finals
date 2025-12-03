@@ -30,10 +30,12 @@ class BookmarksController extends Controller
         }
 
         $chirp->bookmarks()->create([
-            'user_id' => auth()->id()
+            'user_id' => auth()->id(),
+            'chirp_id' => $chirp->id,
         ]);
 
-        return response()->json(['success' => true]);
+//        return back()->with('success', 'Bookmarked' . $chirp->message);
+         return response()->json(['success' => true]);
     }
 
     /**
