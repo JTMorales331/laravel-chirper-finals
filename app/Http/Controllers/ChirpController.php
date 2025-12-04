@@ -16,9 +16,18 @@ class ChirpController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $chirps = Chirp::with('user')
+
+        $query = Chirp::with('user');
+
+//        $chirps = $query->latest()->
+        if ($tag = $request->query('tag')) {
+            $normalizedTag = strtolower($tag);
+            $query->where('message', 'LIKE', "%#$normalizedTag%");
+        }
+
+        $chirps = $query
             ->latest()
             ->take(50)
             ->get();
