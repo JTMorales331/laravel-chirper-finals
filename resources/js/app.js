@@ -191,3 +191,10 @@ async function bookmark(btn) {
 }
 
 window.bookmark = bookmark;
+
+function linkifyHashtag(text){
+    const repl = text.replace(/#(\w+)/g, '<a href="#">#$1</a>');
+    return repl;
+}
+
+window.linkifyHashtag = linkifyHashtag;

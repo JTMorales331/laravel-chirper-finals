@@ -61,7 +61,7 @@
                 </div>
 
                 <p class="mt-1 mb-3">
-                    {{ $chirp->message }}
+                    {!! linkifyHashtags($chirp->message) !!}
                 </p>
                 {{-- buttons --}}
                 <div
