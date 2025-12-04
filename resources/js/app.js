@@ -159,6 +159,11 @@ async function bookmark(btn) {
             }
         )
 
+        if (res.redirected === true) {
+            // console.log({res})
+            window.location.href = res.url;
+        }
+
         if(parentDiv && btn && parentDiv.contains(btn) && cardToRemove){
             console.log(cardToRemove)
             cardToRemove.remove();
