@@ -16,7 +16,7 @@ if (!function_exists('linkifyHashtags')) {
         // https://stackoverflow.com/questions/11174807/how-to-use-preg-replace-callback
         return preg_replace_callback($pattern, function ($matches) {
 //            $tag = strtolower($matches[1]);
-            $replacement = '<a class="btn btn-ghost btn-xs text-blue-500 hover:underline active:opacity-60" href="/?tag=' . strtolower($matches[1]) . '">' . $matches[0] . '</a>';
+            $replacement = '<a class="text-xs font-bold text-blue-500 hover:underline active:opacity-60 transition-all duration-300" href="/?tag=' . strtolower($matches[1]) . '">' . $matches[0] . '</a>';
             return $replacement;
         }, $text);
     }
