@@ -16,33 +16,21 @@ class ChirpController extends Controller
 {
     use AuthorizesRequests;
 
-    /**
-     * Display a listing of the resource.
-     */
-    public function index(Request $request)
+    // because I'm thinking of having separate index controllers
+    private function handleSearch(Request $request)
     {
-
         $query = Chirp::with('user');
 
-//        $chirps = $query->latest()->
-
         // maybe we can combine 'tag' query to 'q' query already
-        if ($tag = $request->query('tag')) {
-            $normalizedTag = strtolower($tag);
-            $query->where('message', 'LIKE', "%#$normalizedTag%");
-        }
+//        if ($tag = $request->query('tag')) {
+//            $normalizedTag = strtolower($tag);
+//            $query->where('message', 'LIKE', "%$normalizedTag%");
+//        }
 
         if ($search = $request->query('q')) {
             $normalized = strtolower($search);
             // https://laravel.com/docs/12.x/queries#joins
             // https://laravel.com/docs/12.x/eloquent-relationships
-//            $query->join('users', 'chirps.user_id', '=', 'users.id')
-//                ->where(function (Builder $q) use ($normalized) {
-//                    $q->where('chirps.message', 'LIKE', "%$normalized%")
-//                        ->orWhere('users.name', 'LIKE', "%$normalized%");
-//
-//                });
-
             // a bit more Eloquent or something
             // how to know if we can do WhereHas:
             // check if what we want to WhereHas with (user) is related to
@@ -55,11 +43,33 @@ class ChirpController extends Controller
             });
         }
 
-        $chirps = $query
-//            ->latest()
-            ->take(50)
-            ->get();
+        return $query->latest()->take(50)->get();
+    }
+
+    /**
+     * Display a listing of the resource.
+     */
+    public function index(Request $request)
+    {
+
+
+//        $chirps = $query
+////            ->latest()
+//            ->take(50)
+//            ->get();
+
+        $chirps = $this->handleSearch($request);
+
         return view('home', ['chirps' => $chirps]);
+    }
+
+    public function search(Request $request)
+    {
+        $chirps = $this->handleSearch($request);
+
+        $keyword = $request->query('q');
+
+        return view('search', ['chirps' => $chirps, 'keyword' => $keyword]);
     }
 
     /**

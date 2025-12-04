@@ -36,6 +36,49 @@
 
                     {{-- IN ENGLISH: if auth got checked and auth id is equal to current chirp's user_id --}}
                     {{-- @if (auth()->check() && auth()->id() === $chirp->user_id)--}}
+
+                    <button onclick="bookmark(this)"
+                            class="ml-auto btn btn-xs {{ $chirp->bookmarks->contains('user_id', auth()->id()) ? "btn-neutral" : "btn-ghost" }}"
+                            data-id="{{ $chirp->id }}"
+                            data-bookmarked="{{ (bool)$chirp->bookmarks->contains('user_id', auth()->id()) }}"
+                    >
+                        {{ $chirp->bookmarks->contains('user_id', auth()->id()) ? "Unbookmark" : "Bookmark" }}
+                    </button>
+
+                    {{--  @endif--}}
+                </div>
+
+                <p class="mt-1 mb-4">
+                    {!! linkifyHashtags($chirp->message) !!}
+                </p>
+                {{-- buttons --}}
+                <div class="flex justify-between items-center  border-t border-gray-400 pt-3">
+                    <div
+                        class="likes-wrapper flex flex-row justify-start gap-3 w-full items-center">
+                    <span class="text-xs">
+                        <span class="font-bold likes-count"
+                              id="likes-{{ $chirp->id }}">{{ $chirp->likes->count() }}</span> <span
+                            class="text-gray-500">Likes</span>
+                    </span>
+
+                        <button type="button" data-id="{{$chirp->id}}"
+                                data-liked="{{ $chirp->likes->contains('user_id', auth()->id()) ? '1' : '0' }}"
+                                onclick="thingy(this, {{ auth()->id() ? "true" : "false" }})"
+                                class="toggleBtn btn btn-info btn-xs {{ $chirp->likes->contains('user_id', auth()->id()) ? "" : "btn-outline"}}">
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                 fill="{{ $chirp->likes->contains('user_id', auth()->id()) ? "yes" : "none" }}"
+                                 viewBox="0 0 24 24"
+                                 stroke-width="2.5" stroke="currentColor" class="size-[1.2em]">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                      d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"/>
+                            </svg>
+                            <span id="text-{{ $chirp->id }}">
+                        {{ $chirp->likes->contains('user_id', auth()->id()) ? "Unlike" : "Like" }}
+                        </span>
+                        </button>
+
+
+                    </div>
                     @can('update', $chirp)
                         <div class="flex gap-1">
                             {{--                    Edit--}}
@@ -57,46 +100,8 @@
                             </form>
                         </div>
                     @endcan
-                    {{--  @endif--}}
                 </div>
 
-                <p class="mt-1 mb-3">
-                    {!! linkifyHashtags($chirp->message) !!}
-                </p>
-                {{-- buttons --}}
-                <div
-                    class="likes-wrapper flex flex-row justify-start gap-3 w-full items-center border-t border-gray-400 pt-3">
-                    <span class="text-xs">
-                        <span class="font-bold likes-count"
-                              id="likes-{{ $chirp->id }}">{{ $chirp->likes->count() }}</span> <span
-                            class="text-gray-500">Likes</span>
-                    </span>
-
-                    <button type="button" data-id="{{$chirp->id}}"
-                            data-liked="{{ $chirp->likes->contains('user_id', auth()->id()) ? '1' : '0' }}"
-                            onclick="thingy(this, {{ auth()->id() ? "true" : "false" }})"
-                            class="toggleBtn btn btn-info btn-xs {{ $chirp->likes->contains('user_id', auth()->id()) ? "" : "btn-outline"}}">
-                        <svg xmlns="http://www.w3.org/2000/svg"
-                             fill="{{ $chirp->likes->contains('user_id', auth()->id()) ? "yes" : "none" }}"
-                             viewBox="0 0 24 24"
-                             stroke-width="2.5" stroke="currentColor" class="size-[1.2em]">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                  d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"/>
-                        </svg>
-                        <span id="text-{{ $chirp->id }}">
-                        {{ $chirp->likes->contains('user_id', auth()->id()) ? "Unlike" : "Like" }}
-                        </span>
-                    </button>
-
-                    <button onclick="bookmark(this)"
-                            class="ml-auto btn btn-xs {{ $chirp->bookmarks->contains('user_id', auth()->id()) ? "btn-neutral" : "btn-ghost" }}"
-                            data-id="{{ $chirp->id }}"
-                            data-bookmarked="{{ (bool)$chirp->bookmarks->contains('user_id', auth()->id()) }}"
-                    >
-                        {{ $chirp->bookmarks->contains('user_id', auth()->id()) ? "Unbookmark" : "Bookmark" }}
-                    </button>
-
-                </div>
             </div>
         </div>
     </div>
