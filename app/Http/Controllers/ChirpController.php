@@ -22,10 +22,16 @@ class ChirpController extends Controller
         $query = Chirp::with('user');
 
         // maybe we can combine 'tag' query to 'q' query already
-//        if ($tag = $request->query('tag')) {
-//            $normalizedTag = strtolower($tag);
-//            $query->where('message', 'LIKE', "%$normalizedTag%");
-//        }
+        if ($tag = $request->query('tag')) {
+            $normalizedTag = strtolower($tag);
+            $query->where(function (Builder $q) use ($normalizedTag) {
+                // NOTE: have space
+                $q->where('message', 'LIKE', "% $normalizedTag %") // a hashtag is in the middle of the message
+                ->orWhere('message', 'LIKE', "% $normalizedTag") // message ends with the hashtag
+                ->orWhere('message', 'LIKE', "$normalizedTag %") // message starts with a hashtag
+                ->orWhere('message', '=', $normalizedTag); // message is just a hashtag
+            });
+        }
 
         if ($search = $request->query('q')) {
             $normalized = strtolower($search);
@@ -35,6 +41,8 @@ class ChirpController extends Controller
             // how to know if we can do WhereHas:
             // check if what we want to WhereHas with (user) is related to
             // the current model we are querying with og (chirp)
+
+            // suggestion: updatable cache to avoid looking around the DB
             $query->where(function (Builder $q) use ($normalized) {
                 $q->where('message', 'LIKE', "%$normalized%")
                     ->orWhereHas("user", function (Builder $q2) use ($normalized) {
@@ -68,8 +76,11 @@ class ChirpController extends Controller
         $chirps = $this->handleSearch($request);
 
         $keyword = $request->query('q');
+        $tag = $request->query('tag');
+//        var_dump($keyword);
+//        dump($tag);
 
-        return view('search', ['chirps' => $chirps, 'keyword' => $keyword]);
+        return view('search', ['chirps' => $chirps, 'keyword' => $keyword, 'tag' => $tag]);
     }
 
     /**

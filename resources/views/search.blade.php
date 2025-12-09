@@ -4,7 +4,7 @@
     </x-slot:title>
     <div class="max-w-2xl mx-auto">
 
-        <h1 class="text-3xl font-bold mt-8">Results of: {{ $keyword }}</h1>
+        <h1 class="text-3xl font-bold mt-8">Results of: {{ $keyword ?? $tag }}</h1>
 
         <!-- Feed -->
         <div id="chirpsContainer" class="space-y-4 mt-8">
