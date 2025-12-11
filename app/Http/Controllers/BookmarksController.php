@@ -34,9 +34,7 @@ class BookmarksController extends Controller
         $chirps = $bookmarks->pluck('chirp');
 
         // put the cache in cache key
-        if ($chirps && $this->cacheKey()) {
-            Cache::put($this->cacheKey(), $chirps);
-        }
+        Cache::put($this->cacheKey(), $chirps);
 
         return view('bookmarks', ['chirps' => $chirps]);
     }
