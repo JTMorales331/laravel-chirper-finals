@@ -94,7 +94,7 @@ class ChirpController extends Controller
 
 //        put new cache
 //        must be done to array
-        Cache::put($cacheKey, $chirps->toArray(), 30);
+        Cache::put($cacheKey, $chirps, 30);
 
         return view('home', ['chirps' => $chirps]);
     }
@@ -130,7 +130,7 @@ class ChirpController extends Controller
 
         if ($chirps) {
 //            dd($chirps);
-            Cache::put($cacheKey, $chirps->toArray(), 600);
+            Cache::put($cacheKey, $chirps, 600);
         }
 
         return view('search', ['chirps' => $chirps, 'keyword' => $search, 'tag' => $tag]);
