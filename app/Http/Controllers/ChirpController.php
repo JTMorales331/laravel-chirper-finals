@@ -18,11 +18,27 @@ class ChirpController extends Controller
 {
     use AuthorizesRequests;
 
+    private function getCacheKey(Request $request)
+    {
+        $allQueries = $request->query();
+
+        if (empty($allQueries)) {
+            return "chirp_all_chirps";
+        }
+        ksort($allQueries);
+
+//        dd('chirps_' . strtolower((http_build_query($allQueries, "", "_"))));
+        $combinedQueries = implode(" ", array_filter($allQueries));
+        $combinedQueries = explode(" ", $combinedQueries);
+        sort($combinedQueries);
+        $cacheKey = implode("_", $combinedQueries);
+        return 'chirps_' . strtolower($cacheKey);
+    }
+
     // because I'm thinking of having separate index controllers
     private function handleSearch(Request $request)
     {
         $query = Chirp::with('user');
-
         // maybe we can combine 'tag' query to 'q' query already
         if ($tag = $request->query('tag')) {
             $normalizedTag = strtolower($tag);
@@ -41,20 +57,6 @@ class ChirpController extends Controller
 
             // suggestion: updatable cache to avoid looking around the DB
 
-            $queryArray = explode(" ", $normalized);
-            sort($queryArray);
-            $cacheKey = implode("_", $queryArray);
-//            var_dump($cacheKey);
-
-            // get cache if it still exists
-            $cache = Cache::get($cacheKey);
-
-            if ($cache) {
-//                var_dump($cache);
-                return $cache;
-            }
-
-//            $retrievedCachedQuery = Cache::get($normalized)
 
             // https://laravel.com/docs/12.x/queries#joins
             // https://laravel.com/docs/12.x/eloquent-relationships
@@ -69,11 +71,6 @@ class ChirpController extends Controller
                     });
             });
 
-            $output = $query->latest()->take(50)->get();
-            if ($output) {
-                Cache::put($cacheKey, $output, 30);
-            }
-
         }
 
         return $query->latest()->take(50)->get();
@@ -85,27 +82,58 @@ class ChirpController extends Controller
     public function index(Request $request)
     {
 
+        $cacheKey = $this->getCacheKey($request);
 
-//        $chirps = $query
-////            ->latest()
-//            ->take(50)
-//            ->get();
+        if ($cache = Cache::get($cacheKey)) {
+//            var_dump($cache);
+//            var_dump($this->cacheKey);
+            return view('home', ['chirps' => $cache]);
+        }
 
         $chirps = $this->handleSearch($request);
+
+//        put new cache
+//        must be done to array
+        Cache::put($cacheKey, $chirps->toArray(), 30);
 
         return view('home', ['chirps' => $chirps]);
     }
 
     public function search(Request $request)
     {
+//        $chirps = $this->handleSearch($request);
+
+//        $keyword = $request->query('q');
+
+        $tag = $request->query('tag');
+        $search = $request->query('q');
+
+        if ($tag === null && $search === null) {
+            $tag = trim($tag);
+            $search = trim($search);
+            if ($search === "" && $tag === "") {
+                return view('search', ['chirps' => [], 'keyword' => "", 'tag' => ""]);
+            }
+
+        }
+
+        $cacheKey = $this->getCacheKey($request);
+
+        if (Cache::has($cacheKey)) {
+            $cache = Cache::get($cacheKey);
+//            var_dump($cache);
+//            var_dump($this->cacheKey);
+            return view('search', ['chirps' => $cache, 'keyword' => $search, 'tag' => $tag]);
+        }
+
         $chirps = $this->handleSearch($request);
 
-        $keyword = $request->query('q');
-        $tag = $request->query('tag');
-//        var_dump($keyword);
-//        dump($tag);
+        if ($chirps) {
+//            dd($chirps);
+            Cache::put($cacheKey, $chirps->toArray(), 600);
+        }
 
-        return view('search', ['chirps' => $chirps, 'keyword' => $keyword, 'tag' => $tag]);
+        return view('search', ['chirps' => $chirps, 'keyword' => $search, 'tag' => $tag]);
     }
 
     /**
@@ -134,6 +162,8 @@ class ChirpController extends Controller
 //        ]);
 
         auth()->user()->chirps()->create($validated);
+        Cache::flush();
+//        Cache::forget($this->getCacheKey(request()));
 
         return redirect('/')->with('success', 'Your chirp has been posted!!');
     }
@@ -170,6 +200,9 @@ class ChirpController extends Controller
 
         $chirp->update($validated);
 
+        Cache::flush();
+//        Cache::forget('chirp_all_chirps');
+
         return redirect('/')->with('success', 'Your chirp has been updated!!');
     }
 
@@ -180,6 +213,8 @@ class ChirpController extends Controller
     {
         $this->authorize('delete', $chirp);
         $chirp->delete();
+        Cache::flush();
+//        Cache::forget('chirp_all_chirps');
 
         return redirect('/')->with('success', 'Your chirp has been deleted!!');
     }
