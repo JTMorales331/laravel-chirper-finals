@@ -24,6 +24,9 @@ class BookmarksController extends Controller
         $cache = Cache::get($this->cacheKey());
         if ($cache) {
 //            var_dump($cache);
+//            dd($cache);
+//            $chirps = Chirp::hydrate($cache);
+//            dd($chirps);
             return view('bookmarks', ['chirps' => $cache]);
         }
 
@@ -31,10 +34,11 @@ class BookmarksController extends Controller
         $bookmarks = auth()->user()->bookmarks()->with('chirp.user')->latest()->get();
 
         // we "pluc" the chirp models from the bookmarks collection
-        $chirps = $bookmarks->pluck('chirp');
+        $chirps = $bookmarks->pluck('chirp')->filter();
 
         // put the cache in cache key
-        Cache::put($this->cacheKey(), $chirps);
+        Cache::put($this->cacheKey(), $chirps, 10);
+//        dd($chirps);
 
         return view('bookmarks', ['chirps' => $chirps]);
     }
