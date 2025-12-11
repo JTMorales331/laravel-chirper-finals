@@ -12,6 +12,8 @@ use Illuminate\Database\Eloquent\Builder;
 
 use App\Policies\ChirpPolicy;
 
+use Illuminate\Support\Facades\Cache;
+
 class ChirpController extends Controller
 {
     use AuthorizesRequests;
@@ -35,20 +37,43 @@ class ChirpController extends Controller
 
         if ($search = $request->query('q')) {
             $normalized = strtolower($search);
+
+
+            // suggestion: updatable cache to avoid looking around the DB
+
+            $queryArray = explode(" ", $normalized);
+            sort($queryArray);
+            $cacheKey = implode("_", $queryArray);
+//            var_dump($cacheKey);
+
+            // get cache if it still exists
+            $cache = Cache::get($cacheKey);
+
+            if ($cache) {
+//                var_dump($cache);
+                return $cache;
+            }
+
+//            $retrievedCachedQuery = Cache::get($normalized)
+
             // https://laravel.com/docs/12.x/queries#joins
             // https://laravel.com/docs/12.x/eloquent-relationships
             // a bit more Eloquent or something
             // how to know if we can do WhereHas:
             // check if what we want to WhereHas with (user) is related to
             // the current model we are querying with og (chirp)
-
-            // suggestion: updatable cache to avoid looking around the DB
             $query->where(function (Builder $q) use ($normalized) {
                 $q->where('message', 'LIKE', "%$normalized%")
                     ->orWhereHas("user", function (Builder $q2) use ($normalized) {
                         $q2->where('name', 'LIKE', "%$normalized%");
                     });
             });
+
+            $output = $query->latest()->take(50)->get();
+            if ($output) {
+                Cache::put($cacheKey, $output, 30);
+            }
+
         }
 
         return $query->latest()->take(50)->get();
